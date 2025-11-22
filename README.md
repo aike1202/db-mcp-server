@@ -3,6 +3,8 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
 [![MCP](https://img.shields.io/badge/MCP-SDK-green.svg)](https://modelcontextprotocol.io/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<img width="1211" height="970" alt="image" src="https://github.com/user-attachments/assets/9c5673e7-0f24-4d20-941c-7d6856ef15f2" />
+
 
 **Database MCP Server** 是一个通用的数据库连接服务，基于 [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) 构建。它允许 AI 助手（如 Claude Desktop, Cursor, Windsurf）直接与您的关系型数据库进行交互，安全地查询数据、分析表结构，甚至在授权的情况下执行数据修改。
 
