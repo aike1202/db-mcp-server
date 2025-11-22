@@ -39,7 +39,17 @@
 
 ## 🚀 快速开始
 
-### 1. 安装与构建
+### 方式一：直接使用 (推荐)
+
+无需下载源码，直接通过 `npx` 运行（需安装 Node.js）：
+
+```bash
+npx db-mcp-server
+```
+
+### 方式二：源码安装
+
+如果您想进行二次开发：
 
 ```bash
 git clone https://github.com/your-username/db-mcp-server.git
@@ -56,8 +66,8 @@ npm run build
 {
   "mcpServers": {
     "my-database": {
-      "command": "node",
-      "args": ["C:/path/to/db-mcp-server/build/index.js"],
+      "command": "npx",
+      "args": ["-y", "db-mcp-server"],
       "env": {
         "DATABASE_URL": "mysql://root:password@localhost:3306/testdb",
         "MCP_DB_READ_ONLY": "false"
@@ -66,8 +76,6 @@ npm run build
   }
 }
 ```
-
-> **注意**: 请将 `args` 中的路径替换为您实际的项目构建路径。
 
 ---
 
