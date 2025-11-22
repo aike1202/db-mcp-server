@@ -3,6 +3,22 @@
   "version": "0.1.0",
   "description": "MCP server for MySQL, PostgreSQL, SQLite, SQL Server, and Oracle",
   "type": "module",
+  "files": [
+    "build"
+  ],
+  "keywords": [
+    "mcp",
+    "database",
+    "mysql",
+    "postgresql",
+    "sqlite",
+    "sqlserver",
+    "oracle",
+    "ai",
+    "llm"
+  ],
+  "author": "",
+  "license": "MIT",
   "bin": {
     "db-mcp": "./build/index.js"
   },
