@@ -4,17 +4,19 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-function getLogFilePath(): string {
+function getLogDir() {
   if (process.env.MCP_LOG_PATH) {
-    return path.resolve(process.env.MCP_LOG_PATH);
+    const envPath = path.resolve(process.env.MCP_LOG_PATH);
+    if (envPath.endsWith('.jsonl') || envPath.endsWith('.log')) {
+      return path.dirname(envPath);
+    }
+    return envPath;
   }
-  return path.join(__dirname, '../../logs/mcp-audit.jsonl');
+  return path.join(__dirname, '../../logs');
 }
 
-const LOG_FILE = getLogFilePath();
-const LOG_DIR = path.dirname(LOG_FILE);
+const LOG_DIR = getLogDir();
 
-// 确保日志目录存在
 if (!fs.existsSync(LOG_DIR)) {
   try {
     fs.mkdirSync(LOG_DIR, { recursive: true });
@@ -35,6 +37,16 @@ export interface LogEntry {
 }
 
 export class Logger {
+  static getLogFile() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`;
+    
+    return path.join(LOG_DIR, `mcp-audit-${dateStr}.jsonl`);
+  }
+
   static log(entry: Omit<LogEntry, 'timestamp'>) {
     const fullEntry: LogEntry = {
       timestamp: new Date().toISOString(),
@@ -42,9 +54,10 @@ export class Logger {
     };
 
     const line = JSON.stringify(fullEntry) + '\n';
+    const logFile = this.getLogFile();
 
     try {
-      fs.appendFileSync(LOG_FILE, line, 'utf8');
+      fs.appendFileSync(logFile, line, 'utf8');
     } catch (e) {
       console.error('Failed to write to log file:', e);
     }

@@ -32,7 +32,14 @@ const DB_URL = process.env.DATABASE_URL;
 const IS_READ_ONLY = process.env.MCP_DB_READ_ONLY === 'true';
 
 if (!DB_URL) {
-  console.error("Error: DATABASE_URL environment variable is required");
+  const msg = "Error: DATABASE_URL environment variable is required";
+  console.error(msg);
+  Logger.log({
+    tool: 'system',
+    duration_ms: 0,
+    success: false,
+    error: msg
+  });
   process.exit(1);
 }
 
@@ -60,7 +67,14 @@ let db: IDatabaseAdapter;
 try {
   db = getDatabaseAdapter(DB_URL);
 } catch (error) {
-  console.error("Configuration error:", error);
+  const msg = "Configuration error: " + (error instanceof Error ? error.message : String(error));
+  console.error(msg);
+  Logger.log({
+    tool: 'system',
+    duration_ms: 0,
+    success: false,
+    error: msg
+  });
   process.exit(1);
 }
 
@@ -238,13 +252,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         let rows: any[] = [];
         
         try {
+           query = `SELECT * FROM ${table_name} LIMIT 5`;
            rows = await db.query(query);
+           sqlQuery = query;
         } catch (e) {
            try {
-             rows = await db.query(`SELECT TOP 5 * FROM ${table_name}`);
+             query = `SELECT TOP 5 * FROM ${table_name}`;
+             rows = await db.query(query);
+             sqlQuery = query;
            } catch (e2) {
              try {
-               rows = await db.query(`SELECT * FROM ${table_name} WHERE ROWNUM <= 5`);
+               query = `SELECT * FROM ${table_name} WHERE ROWNUM <= 5`;
+               rows = await db.query(query);
+               sqlQuery = query;
              } catch (e3) {
                 throw new Error(`Failed to inspect table: ${e}`);
              }
@@ -302,6 +322,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 async function main() {
   try {
+    Logger.log({
+      tool: 'system',
+      duration_ms: 0,
+      success: true,
+      result_summary: "Server starting"
+    });
+
     // 先启动 Transport，避免数据库连接超时导致 MCP 初始化失败
     const transport = new StdioServerTransport();
     await server.connect(transport);
@@ -312,12 +339,32 @@ async function main() {
     try {
       await db.connect();
       console.error("Database connected successfully");
+      Logger.log({
+        tool: 'system',
+        duration_ms: 0,
+        success: true,
+        result_summary: "Database connected successfully"
+      });
     } catch (dbError) {
+      const errMsg = dbError instanceof Error ? dbError.message : String(dbError);
       console.error("Failed to connect to database:", dbError);
       console.error("Server will start in disconnected mode.");
+      Logger.log({
+        tool: 'system',
+        duration_ms: 0,
+        success: false,
+        error: `Failed to connect to database: ${errMsg}`
+      });
     }
   } catch (error) {
+    const errMsg = error instanceof Error ? error.message : String(error);
     console.error("Fatal error:", error);
+    Logger.log({
+      tool: 'system',
+      duration_ms: 0,
+      success: false,
+      error: `Fatal error: ${errMsg}`
+    });
     process.exit(1);
   }
 }
