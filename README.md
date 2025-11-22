@@ -37,30 +37,15 @@
 
 ---
 
-## 🚀 快速开始
+## 🚀 使用指南
 
 ### 方式一：通过 npx 使用 (推荐)
 
-您无需手动下载源码。只需在 Windsurf 或 Cursor 的配置文件中，将 `command` 设置为 `npx`，`args` 设置为 `["-y", "db-mcp-server"]` 即可（见下方配置示例）。
+这是最简单的方式，无需手动下载源码，直接在 MCP 客户端中配置即可。
 
-### 方式二：源码安装 (开发用)
-
-如果您想进行二次开发：
-
-```bash
-git clone https://github.com/your-username/db-mcp-server.git
-cd db-mcp-server
-npm install
-npm run build
-```
-
-### 2. 配置 (Windsurf / Cursor)
+**配置 (Windsurf / Cursor)**
 
 在您的 MCP 配置文件中（通常位于 `%APPDATA%\Cursor\User\globalStorage\mcp-server-config.json`），添加如下配置：
-
-**方式 A：使用 NPM 包 (推荐)**
-
-无需下载代码，直接使用：
 
 ```json
 {
@@ -77,9 +62,20 @@ npm run build
 }
 ```
 
-**方式 B：使用本地源码**
+### 方式二：源码安装 (开发用)
 
-如果您 git clone 了项目并进行了修改：
+如果您想进行二次开发或调试源码：
+
+**1. 下载与构建**
+
+```bash
+git clone https://github.com/your-username/db-mcp-server.git
+cd db-mcp-server
+npm install
+npm run build
+```
+
+**2. 配置 (Windsurf / Cursor)**
 
 ```json
 {
@@ -96,7 +92,7 @@ npm run build
 }
 ```
 
-> **注意**: 请将 `DATABASE_URL` 替换为您的真实数据库连接字符串。
+> **注意**: 请将 `args` 中的路径替换为您实际的项目构建路径，并将 `DATABASE_URL` 替换为您的真实数据库连接字符串。
 
 ---
 
